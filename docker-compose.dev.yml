@@ -1,0 +1,51 @@
+# frontend dev 모드를 위한 파일입니다
+# 변경사항이 실시간으로 반영됩니다
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dev-Dockerfile
+    ports:
+      - "443:443"
+    depends_on:
+      - backend
+    networks:
+      - internal
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    expose:
+      - "8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - internal
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: maran
+      POSTGRES_USER: maran08
+      POSTGRES_PASSWORD: maran4242!
+    networks:
+      - internal
+
+# npm run dev 용도
+  node:
+    image: node:latest
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge

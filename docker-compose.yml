@@ -1,0 +1,46 @@
+services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./next/out:/html
+    ports:
+      - "443:443"
+    depends_on:
+      - backend
+      - next
+    networks:
+      - internal
+
+  next: 
+    build: ./next
+
+  backend:
+    build:
+      context: ./spring
+      dockerfile: Dockerfile
+    expose:
+      - "8080"
+    depends_on:
+      - mysql
+    networks:
+      - internal
+
+  mysql:
+    build: ./mysql
+    networks:
+      - internal
+
+volumes:
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      device: /data
+      type: none
+      o: bind
+
+networks:
+  internal:
+    driver: bridge
