@@ -4,7 +4,7 @@ import Check from "../public/image/check.svg";
 import Cancel from "../public/image/cancel.svg";
 import { useState } from "react";
 
-const gamePage = () => {
+const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
   const time = "24:00:00";
   const progress = "1 / 6";
@@ -56,6 +56,8 @@ const gamePage = () => {
             </div>
             <div className={styles.qContent}>
               어쩌구저쩌구 hello world를 출력해주세요.
+              <br />
+              어쩌구저쩌구 hello world를 출력해주세요.
             </div>
           </div>
           <div className={styles.game}>
@@ -95,4 +97,4 @@ const gamePage = () => {
     </div>
   );
 };
-export default gamePage;
+export default GamePage;
