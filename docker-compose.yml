@@ -13,15 +13,17 @@ services:
     networks:
       - internal
 
-  next: 
+  next:
     build: ./next
 
   backend:
     build:
-      context: ./spring
+      context: ./backend
       dockerfile: Dockerfile
     expose:
       - "8080"
+    volumes:
+      - ./backend:/app
     depends_on:
       - mysql
     networks:
