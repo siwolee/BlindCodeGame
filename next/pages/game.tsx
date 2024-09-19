@@ -8,7 +8,7 @@ const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
   const time = "24:00:00";
   const progress = "1 / 6";
-  const handleCopy = (e: any) => {
+  const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
   };
 
