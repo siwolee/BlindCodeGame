@@ -2,11 +2,10 @@ FROM node:alpine as build
 
 WORKDIR /app
 
-COPY package*.json ./
+# COPY package*.json ./
 
+# COPY . .
 RUN npm i
-
-COPY . .
-
 RUN npm run build
 # RUN npm i && npm run build
+CMD ["sleep", "infinity"]

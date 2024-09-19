@@ -1,38 +1,40 @@
 services:
+  next:
+    build: ./next
+    volumes:
+      - ./next:/app
+
   nginx:
     build:
       context: ./nginx
       dockerfile: Dockerfile
     volumes:
-      - ./next/out:/html
+      - ./next/build:/html
     ports:
       - "443:443"
     depends_on:
-      - backend
       - next
+      # - backend
     networks:
       - internal
 
-  next:
-    build: ./next
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   expose:
+  #     - "8080"
+  #   volumes:
+  #     - ./backend:/app
+  #   # depends_on:
+  #   #   - mysql
+  #   networks:
+  #     - internal
 
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    expose:
-      - "8080"
-    volumes:
-      - ./backend:/app
-    depends_on:
-      - mysql
-    networks:
-      - internal
-
-  mysql:
-    build: ./mysql
-    networks:
-      - internal
+  # mysql:
+  #   build: ./mysql
+  #   networks:
+  #     - internal
 
 volumes:
   db_data:
