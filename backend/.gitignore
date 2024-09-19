@@ -9,6 +9,9 @@ python
 **/logs
 **/src/main/generated/
 
+back
+./back/*
+
 
 ### STS ###
 .apt_generated
