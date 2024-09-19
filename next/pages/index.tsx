@@ -1,13 +1,17 @@
 import styles from "../styles/home/home.module.scss";
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+
 
 export default function HomePage() {
+  const router = useRouter(); // useRouter 사용
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = async () => {
     try {
       // API 호출 코드 추가 예정
       console.log(inputValue);
+      router.push('/game');
     } catch (error) {
       console.error('Error:', error);
     }
