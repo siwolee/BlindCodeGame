@@ -1,59 +1,58 @@
-import Image from "next/image";
+import styles from "../styles/home/home.module.scss";
+import { useState } from 'react';
 
+export default function HomePage() {
+  const [inputValue, setInputValue] = useState('');
 
-export default function Home() {
+  const handleSubmit = async () => {
+    try {
+      // API 호출 코드 추가 예정
+      console.log(inputValue);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const title = '🙇🏻‍♀️ 석봉아 코드를 썰거라 🙇🏼‍♂️';
+
+  const content = `안 보이는 채로 코드를 작성해서 자신의 타자력을 뽐내보아요! 
+  원격 참여도 가능하게 열어놓을 예정입니다. 
+  하지만 상품은 대회 신청한 사람 && 현장 참석자에 한해 증정될 예정입니다!
+
+  🖥️ 사용 언어 🖥️ : C
+  ⏳ 제한 시간 ⏳ : 30분
+  ❗️ 주의 사항 ❗️ : 대회 컨셉에 맞게 블라인드로 진행 부탁드립니다 🙏
+  🚫 개발자 도구 금지, 🚫 복사/붙여넣기 금지, 🚫 url에 코드 사용 금지    
+  `;
+
   return (
-    <>
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+    <div className={styles.layout}>
+      <div className={styles.homeContainer}>
+        <div className={styles.infoContainer}>
+          <div className={styles.title}>{title}</div>
+          <div className={styles.content}>
+            {content.split('\n').map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.formContainer}>
+          <input
+            className={styles.inputBox}
+            type="text"
+            placeholder="인트라 아이디 입력"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-  </>
+          <button className={styles.submitBtn} onClick={handleSubmit}>
+            확 인
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
