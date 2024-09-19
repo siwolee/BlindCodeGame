@@ -20,7 +20,7 @@ public class Competition {
 	private Long id;
 	@Column(name = "is_end")
 	private Boolean isEnd;
-	@Column(name = "creadted_at")
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	public Competition() {
