@@ -4,16 +4,28 @@ import { useRouter } from 'next/router';
 
 
 export default function HomePage() {
-  const router = useRouter(); // useRouter 사용
+  const router = useRouter(); 
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = async () => {
     try {
-      // API 호출 코드 추가 예정
-      console.log(inputValue);
-      router.push('/game');
+      const res = await fetch(`http://localhost:8080/blind/game?intraId=${inputValue}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      // console.log("res: ", res);
+      if (res.ok) {
+        const data = await res.json();
+        // console.log(data);
+        router.push('/game');
+      } else {
+        console.log('res not ok');
+      }
     } catch (error) {
-      console.error('Error:', error);
+      console.log('error: ', error);
+      alert('아직 시작 되지 않았습니다.');
     }
   };
 
