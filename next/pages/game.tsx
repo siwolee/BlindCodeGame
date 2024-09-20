@@ -1,7 +1,5 @@
 import styles from "../styles/game/game.module.scss";
-import Image from "next/image";
-import Check from "../public/image/check.svg";
-import Cancel from "../public/image/cancel.svg";
+
 import { useEffect, useState } from "react";
 import Header from "@/component/game/Header";
 import Sidebar from "@/component/game/Sidebar";
@@ -11,7 +9,7 @@ import Answer from "@/component/game/Answer";
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState<SubjectProps>(null);
+  const [selectedSubject, setSelectedSubject] = useState<SubjectProps>();
 
   const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -56,7 +54,12 @@ const GamePage = () => {
     setSelectedSubject(subject);
     setInputValue(""); // 문제를 클릭할 때 입력값 초기화
   };
+
   const handlePrevious = () => {
+    if (!selectedSubject) {
+      alert("문제를 선택해 주세요.");
+      return;
+    }
     const currentIndex = subjects.findIndex(
       (subject) => subject.level === selectedSubject.level
     );
@@ -68,6 +71,11 @@ const GamePage = () => {
   };
 
   const handleNext = () => {
+    if (!selectedSubject) {
+      alert("문제를 선택해 주세요.");
+      return;
+    }
+
     const currentIndex = subjects.findIndex(
       (subject) => subject.level === selectedSubject.level
     );

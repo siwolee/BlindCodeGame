@@ -6,7 +6,7 @@ import { SubjectProps } from "@/type/subjects";
 
 interface SidebarProps {
   subjects: SubjectProps[];
-  selectedSubject: SubjectProps;
+  selectedSubject: SubjectProps | undefined;
   onSubjectClick: (subject: SubjectProps) => void;
   progress: string;
 }
