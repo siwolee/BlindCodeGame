@@ -44,7 +44,7 @@ public class AdminService {
 	}
 
 	public void endCompetition() {
-		Competition competition = competitionRepository.findByIsEndTrueOrderByIdDesc().orElseThrow(() -> new BusinessException(NOT_START));
+		Competition competition = competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
 		competition.endCompetition();
 		competitionRepository.save(competition);
 	}
