@@ -1,5 +1,6 @@
 import styles from "../styles/admin/admin.module.scss";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 type Subject = {
   name: string;
@@ -14,7 +15,14 @@ type ListItem = {
   subjects: Subject[];
 };
 
-export default function AdminPage() {
+interface AdminProps {
+  isAllowed: boolean;
+  setIsAllowed: (value: boolean) => void;
+}
+
+export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
+  const router = useRouter();
+
   const [level, setLevel] = useState('');
   const [subjectTitle, setSubjectTitle] = useState('');
   const [subjectContent, setSubjectContent] = useState('');
@@ -23,6 +31,16 @@ export default function AdminPage() {
   const [listData, setListData] = useState<ListItem[] | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // 토글 상태를 관리
   
+   // 페이지 접근 권한 체크
+   useEffect(() => {
+    if (!isAllowed) {
+      router.push('/');
+    } else {
+      // 한번 접근을 허용한 후 다시 false로 설정
+      setIsAllowed(false);
+    }
+  }, [router]);
+
   // const listData: ListItem[] = [
   //     {
   //       intraId: 'jeongrol',

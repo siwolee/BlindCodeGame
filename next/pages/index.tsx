@@ -2,27 +2,40 @@ import styles from "../styles/home/home.module.scss";
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
+interface HomeProps {
+  setIsAllowed: (value: boolean) => void;
+}
 
-export default function HomePage() {
+export default function HomePage({ setIsAllowed }: HomeProps) {
   const router = useRouter(); 
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/blind/game?intraId=${inputValue}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      // console.log("res: ", res);
-      if (res.ok) {
-        // const data = await res.json();
-        // console.log(data);
-        router.push('/game');
-      } else {
-        console.log('res not ok');
+      // TEST TMP CODE
+      const tmpOk = true;
+      if (tmpOk) {
+        setIsAllowed(true);
+        inputValue === process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY ?
+        router.push('/admin') : router.push('/game');
       }
+
+      // const res = await fetch(`http://localhost:8080/blind/game?intraId=${inputValue}`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
+      // // console.log("res: ", res);
+      // if (res.ok) {
+      //   // const data = await res.json();
+      //   // console.log(data);
+      //   setIsAllowed(true);
+      //   inputValue === process.env.ADMIN_SECRET_KEY ?
+      //     router.push('/admin') : router.push('/game');
+      // } else {
+      //   console.log('res not ok');
+      // }
     } catch (error) {
       console.log('error: ', error);
       alert('아직 시작 되지 않았습니다.');
