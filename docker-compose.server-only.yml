@@ -1,0 +1,51 @@
+# frontend dev 모드를 위한 파일입니다
+# 백엔드 서버/디비만 킵니다
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - internal
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/blind?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: "user"
+      SPRING_DATASOURCE_PASSWORD: "1234"
+
+  mysql:
+    image: mysql/mysql-server:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: blind
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: 1235
+      TZ: "Asia/Seoul"
+    ports:
+      - "3306:3306"
+    # volumes:
+    #   - ./mysql/conf.d:/etc/mysql/conf.d # MySQL 설정 파일 위치
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    networks:
+      - internal
+
+volumes:
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      device: /data
+      type: none
+      o: bind
+
+networks:
+  internal:
+    driver: bridge

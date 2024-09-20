@@ -10,8 +10,8 @@ BUILDFILE = \
 
 all		: $(BUILD) $(NAME)
 
-dev : FILE = ./docker-compose.dev.yml
-dev : $(NAME)
+server : FILE = ./docker-compose.server-only.yml
+server : $(NAME)
 
 
 cleanbuild:
