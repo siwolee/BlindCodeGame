@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import Header from "@/component/game/Header";
 import Sidebar from "@/component/game/Sidebar";
 import { SubjectProps } from "@/type/subjects";
+import Question from "@/component/game/Question";
+import Answer from "@/component/game/Answer";
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
@@ -89,51 +91,12 @@ const GamePage = () => {
         />
 
         <div className={styles.main}>
-          {selectedSubject && (
-            <div className={styles.question}>
-              <div className={styles.qTitle}>
-                <p>{selectedSubject.name}</p>
-                {selectedSubject.isSolved ? (
-                  <Image src={Check} alt="Check" className={styles.check} />
-                ) : (
-                  <Image src={Cancel} alt="Cancel" className={styles.cancel} />
-                )}
-              </div>
-              <div className={styles.qContent}>{selectedSubject.content}</div>
-            </div>
-          )}
-
-          <div className={styles.game}>
-            <div className={styles.boardWrapper}>
-              <div className={styles.board}>
-                <label className={styles.inputLabel}>
-                  {inputValue ? "입력중입니다..." : "여기에 입력하세요."}
-                </label>
-                <input
-                  type="text"
-                  className={styles.boardInput}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onCopy={handleCopy}
-                  onCut={handleCopy}
-                  onPaste={handleCopy}
-                />
-              </div>
-              <button className={styles.button}>제출</button>
-            </div>
-
-            <div className={styles.result}>
-              <p>컴파일 결과</p>
-              <div className={styles.resultBox}>
-                <p>djflkdjf</p>
-                <p>djflkdjf</p> <p>djflkdjf</p>
-                <p>djflkdjf</p>
-                <p>djflkdjf</p>
-                <p>djflkdjf</p>
-              </div>
-            </div>
-          </div>
-
+          {selectedSubject && <Question selectedSubject={selectedSubject} />}
+          <Answer
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleCopy={handleCopy}
+          />
           <div className={styles.buttons}>
             <button
               className={`${styles.button} ${styles.violet}`}
