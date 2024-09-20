@@ -9,9 +9,8 @@ group = 'gg'
 version = '0.0.1-SNAPSHOT'
 
 springBoot {
-    mainClass = "Blind.BackendApplication"
+    mainClass = "gg.blind.BackendApplication"
 }
-
 
 configurations {
     compileOnly {

@@ -4,21 +4,30 @@ COMPOSEFILE = ./docker-compose.yml
 
 FILE = $(COMPOSEFILE)
 
+BUILDFILE = \
+# ./backend/back \
+
+
 all		: $(BUILD) $(NAME)
 
-dev : FILE = ./docker-compose.dev.yml
-dev : $(NAME)
+server : FILE = ./docker-compose.server-only.yml
+server : $(NAME)
 
-$(NAME) :
+
+cleanbuild:
+	rm -rf $(BUILDFILE)
+
+
+$(NAME) : cleanbuild
 	docker-compose -f $(FILE) up --build #--detach 
 
-clean :
+clean : 
 	docker-compose -f $(FILE)  down --rmi all --remove-orphans -v
 
 ps		: 
 	docker-compose -f $(FILE) ps -a
 
-fclean : clean
+fclean : clean cleanbuild
 	docker system prune --volumes --all --force
 
 re : fclean all
