@@ -17,7 +17,7 @@ export default function HomePage() {
       });
       // console.log("res: ", res);
       if (res.ok) {
-        const data = await res.json();
+        // const data = await res.json();
         // console.log(data);
         router.push('/game');
       } else {
