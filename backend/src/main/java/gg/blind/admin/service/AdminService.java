@@ -36,7 +36,7 @@ public class AdminService {
 	}
 
 	public void startCompetition() {
-		competitionRepository.findByIsEndTrue().ifPresent(competition -> {
+		competitionRepository.findByIsEndFalse().ifPresent(competition -> {
 			throw new DuplicationException(ALREADY_COMPETITION);
 		});
 		Competition competition = new Competition();
@@ -44,13 +44,13 @@ public class AdminService {
 	}
 
 	public void endCompetition() {
-		Competition competition = competitionRepository.findByIsEndTrue().orElseThrow(() -> new BusinessException(NOT_START));
+		Competition competition = competitionRepository.findByIsEndTrueOrderByIdDesc().orElseThrow(() -> new BusinessException(NOT_START));
 		competition.endCompetition();
 		competitionRepository.save(competition);
 	}
 
 	public List<ResultResDto> getResultList() {
-		Competition competition = competitionRepository.findByIsEndTrue()
+		Competition competition = competitionRepository.findByIsEndTrueOrderByIdDesc()
 			.orElseThrow(() -> new BusinessException(NOT_START));
 
 		List<User> users = userRepository.findAll();
