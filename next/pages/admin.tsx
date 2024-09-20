@@ -134,7 +134,7 @@ export default function AdminPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        // setListData(data);
+        setListData(data);
       } else {
         console.log('res not ok');
       }
@@ -146,9 +146,9 @@ export default function AdminPage() {
 
   const toggleDetail = (index: number) => {
     if (expandedIndex === index) {
-      setExpandedIndex(null); // 같은 항목을 클릭하면 닫기
+      setExpandedIndex(null); 
     } else {
-      setExpandedIndex(index); // 다른 항목을 클릭하면 열기
+      setExpandedIndex(index); 
     }
   };
 
@@ -231,9 +231,6 @@ export default function AdminPage() {
             <button className={styles.adminBtn} onClick={handleResultList}>
               결과 조회하기
             </button>
-          {/* </div> */}
-          {/* <div className={styles.listContainer}> */}
-             {/* LIST DATA */}
               {listData
               ? listData.map((item, index) => (
                   <div
