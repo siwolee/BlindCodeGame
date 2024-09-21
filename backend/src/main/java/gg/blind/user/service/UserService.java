@@ -92,8 +92,6 @@ public class UserService {
 			throw new BusinessException(ALREADY_SOLVED);
 		}
 
-
-
 		String sourceCode = submitSubjectReqDto.getCode();
 		String testCase = subject.getTestCase();
 		String correctOutput = subject.getCorrectOutput();
@@ -109,7 +107,7 @@ public class UserService {
 
 		boolean isCorrect = compileResult.getOutput().trim().equals(correctOutput.trim());
 
-		SubmitSubjectResDto result = new SubmitSubjectResDto(testCase, compileResult.getOutput(), correctOutput, isCorrect);
+		SubmitSubjectResDto result = new SubmitSubjectResDto(testCase, compileResult.getOutput(), compileResult.getError(),correctOutput, isCorrect);
 
 		userSubjectRepository.save(new UserSubject(user.getId(), subject.getId(), isCorrect));
 		return result;
