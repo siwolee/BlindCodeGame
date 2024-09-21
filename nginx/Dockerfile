@@ -22,5 +22,7 @@ RUN openssl req -x509 -nodes -days 365 -key /etc/ssl/private/my_key.key -out /et
 RUN chmod 700 /etc/ssl/private/my_key.key
 RUN chmod 700 /etc/ssl/private/my_certificate.crt
 
+# COPY ./cmd.sh cmd.sh
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+# CMD tail -f /dev/null

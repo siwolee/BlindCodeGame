@@ -1,15 +1,17 @@
 services:
   next:
     build: ./next
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
+    networks:
+      - internal
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
       - mysql
     networks:
@@ -44,6 +46,9 @@ services:
       - "443:443"
     depends_on:
       - next
+      - backend
+    networks:
+      - internal
 
 volumes:
   db_data:
