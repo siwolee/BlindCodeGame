@@ -31,7 +31,6 @@ const GamePage = () => {
         `${BASE_URL}subject/list?intraId=${intraId}`
       );
       setSubjects(response.data);
-      // 초기 로딩 시에만 첫 번째 과목을 선택
       if (response.data.length > 0 && !selectedSubject) {
         setSelectedSubject(response.data[0]);
       }

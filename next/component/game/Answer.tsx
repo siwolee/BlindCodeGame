@@ -34,7 +34,6 @@ const Answer = ({
 
       const { user_output } = response.data;
       setResult(user_output);
-
       onSubmit();
     } catch (error) {
       console.error("API 호출 실패:", error);

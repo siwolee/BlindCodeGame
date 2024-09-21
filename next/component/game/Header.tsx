@@ -36,7 +36,6 @@ const Header = ({ time, intraId }: HeaderProps) => {
     return () => clearInterval(timer);
   }, [time, limit]);
 
-  // 남은 시간을 "HH:MM:SS" 형식으로 변환하는 함수
   const formatTime = (seconds: number) => {
     const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
     const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
