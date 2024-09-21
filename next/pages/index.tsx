@@ -46,9 +46,9 @@ export default function HomePage({ setIsAllowed }: HomeProps) {
   ⏳ 제한 시간 ⏳ : 30분
   ❗️ 주의 사항 ❗️ : 대회 컨셉에 맞게 블라인드로 진행 부탁드립니다 🙏
   `;
-  const subContent = `🚫 개발자 도구 금지
-    🚫 복사/붙여넣기 금지
-    🚫 url에 코드 사용 금지`;
+  const subContent = `🚫 개발자 도구 금지 🚫
+    🚫 복사/붙여넣기 금지 🚫
+    🚫 url에 코드 사용 금지 🚫`;
 
   return (
     <div className={styles.layout}>
