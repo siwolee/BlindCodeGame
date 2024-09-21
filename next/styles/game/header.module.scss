@@ -17,18 +17,37 @@
     font-size: 2rem;
     @extend .text-bold;
   }
+}
 
-  .time {
-    display: flex;
-    width: 16rem;
-    padding: 1rem 2rem;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 2rem;
-    background: #f8df85;
-    color: #000;
-    @extend .box;
-    @extend .text-bold;
-    font-size: 20px;
-  }
+.buttons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.time {
+  display: flex;
+  width: 14rem;
+  padding: 0.7rem 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 1rem;
+  background: #f8df85;
+  color: #000;
+  @extend .box;
+  @extend .text-bold;
+  font-size: 20px;
+}
+
+.finish {
+  display: flex;
+  width: 5rem;
+  padding: 0.7rem 1rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: #d8583c;
+  color: #000;
+  @extend .box;
+  @extend .text-bold;
+  font-size: 20px;
 }

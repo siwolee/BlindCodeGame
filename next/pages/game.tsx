@@ -12,7 +12,8 @@ import { useRouter } from "next/router";
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<SubjectProps>();
-  const [subjects, setSubjects] = useState<SubjectProps[]>([]); // subjects 상태 추가
+  const [subjects, setSubjects] = useState<SubjectProps[]>([]);
+  const [time, setTime] = useState<string>("");
 
   const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -22,22 +23,34 @@ const GamePage = () => {
   const totalCount = subjects.length;
   const progress = `${solvedCount} / ${totalCount}`;
   const router = useRouter();
-  const { intraId } = router.query;
+  const { intraId } = router.query as { intraId: string };
+
+  const fetchSubjects = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}subject/list?intraId=${intraId}`
+      );
+      setSubjects(response.data);
+      if (response.data.length > 0 && !selectedSubject) {
+        setSelectedSubject(response.data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchTime = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}subject/list?intraId=${intraId}`
-        );
-        setSubjects(response.data);
-        setSelectedSubject(response.data[0]);
+        const response = await axios.get(`${BASE_URL}game`);
+        setTime(response.data.time);
       } catch (error) {
-        console.error("Error fetching subjects:", error);
+        console.error("Error fetching time:", error);
       }
     };
 
     fetchSubjects();
+    fetchTime();
   }, [intraId]);
 
   const handleSubjectClick = (subject: SubjectProps) => {
@@ -76,9 +89,14 @@ const GamePage = () => {
     }
   };
 
+  const onsubmit = () => {
+    setInputValue("");
+    fetchSubjects();
+  };
+
   return (
     <div className={styles.layout}>
-      <Header />
+      <Header time={time} intraId={intraId} />
 
       <div className={styles.content}>
         <Sidebar
@@ -94,6 +112,9 @@ const GamePage = () => {
             inputValue={inputValue}
             setInputValue={setInputValue}
             handleCopy={handleCopy}
+            intraId={intraId}
+            onSubmit={onsubmit}
+            curLevel={selectedSubject?.level}
           />
           <div className={styles.buttons}>
             <button
