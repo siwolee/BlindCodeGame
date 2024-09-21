@@ -29,7 +29,7 @@ const sidebar = ({
               }`}
               onClick={() => onSubjectClick(subject)}
             >
-              {subject.name}
+              {"level"} {subject.level}
               {subject.isSolved ? (
                 <Image src={Check} alt="Check" className={styles.check} />
               ) : (
