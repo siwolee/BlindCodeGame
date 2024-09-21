@@ -10,6 +10,8 @@ public class CCompiler {
 	public CompileResult compileAndRun(String sourceFileName, String... args) {
 		StringBuilder outputBuilder = new StringBuilder();
 		StringBuilder errorBuilder = new StringBuilder();
+		StringBuilder runOutputBuilder = new StringBuilder();
+		StringBuilder runErrorBuilder = new StringBuilder();
 
 		try {
 			// Compile the source code
@@ -40,9 +42,6 @@ public class CCompiler {
 			BufferedReader runErrorReader = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
 			BufferedReader runOutputReader = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
 
-			StringBuilder runOutputBuilder = new StringBuilder();
-			StringBuilder runErrorBuilder = new StringBuilder();
-
 			while ((line = runErrorReader.readLine()) != null) {
 				runErrorBuilder.append(line).append(System.lineSeparator());
 			}
@@ -54,7 +53,7 @@ public class CCompiler {
 
 			return new CompileResult(runOutputBuilder.toString().trim(), runErrorBuilder.toString().trim());
 		} catch (Exception e) {
-			return new CompileResult("", e.getMessage());
+			return new CompileResult("", errorBuilder.toString().trim());
 		}
 	}
 }
