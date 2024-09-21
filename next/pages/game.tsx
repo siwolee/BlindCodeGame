@@ -1,94 +1,132 @@
 import styles from "../styles/game/game.module.scss";
-import Image from "next/image";
-import Check from "../public/image/check.svg";
-import Cancel from "../public/image/cancel.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Header from "@/component/game/Header";
+import Sidebar from "@/component/game/Sidebar";
+import { SubjectProps } from "@/type/subjects";
+import Question from "@/component/game/Question";
+import Answer from "@/component/game/Answer";
+import { BASE_URL } from "@/type/constant";
+import { useRouter } from "next/router";
 
 const GamePage = () => {
   const [inputValue, setInputValue] = useState("");
-  const time = "24:00:00";
-  const progress = "1 / 6";
+  const [selectedSubject, setSelectedSubject] = useState<SubjectProps>();
+  const [subjects, setSubjects] = useState<SubjectProps[]>([]);
+  const [time, setTime] = useState<string>("");
+
   const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
   };
 
+  const solvedCount = subjects.filter((subject) => subject.isSolved).length;
+  const totalCount = subjects.length;
+  const progress = `${solvedCount} / ${totalCount}`;
+  const router = useRouter();
+  const { intraId } = router.query as { intraId: string };
+
+  const fetchSubjects = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}subject/list?intraId=${intraId}`
+      );
+      setSubjects(response.data);
+      if (response.data.length > 0 && !selectedSubject) {
+        setSelectedSubject(response.data[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}game`);
+        setTime(response.data.time);
+      } catch (error) {
+        console.error("Error fetching time:", error);
+      }
+    };
+
+    fetchSubjects();
+    fetchTime();
+  }, [intraId]);
+
+  const handleSubjectClick = (subject: SubjectProps) => {
+    setSelectedSubject(subject);
+    setInputValue("");
+  };
+
+  const handlePrevious = () => {
+    if (!selectedSubject) {
+      alert("문제를 선택해 주세요.");
+      return;
+    }
+    const currentIndex = subjects.findIndex(
+      (subject) => subject.level === selectedSubject.level
+    );
+    if (currentIndex > 0) {
+      setSelectedSubject(subjects[currentIndex - 1]);
+    } else {
+      alert("첫 번째 문제입니다.");
+    }
+  };
+
+  const handleNext = () => {
+    if (!selectedSubject) {
+      alert("문제를 선택해 주세요.");
+      return;
+    }
+
+    const currentIndex = subjects.findIndex(
+      (subject) => subject.level === selectedSubject.level
+    );
+    if (currentIndex < totalCount - 1) {
+      setSelectedSubject(subjects[currentIndex + 1]);
+    } else {
+      alert("마지막 문제입니다.");
+    }
+  };
+
+  const onsubmit = () => {
+    setInputValue("");
+    fetchSubjects();
+  };
+
   return (
     <div className={styles.layout}>
-      <div className={styles.header}>
-        <div className={styles.logo}>석봉아 코드를 쓰거라</div>
-        <div className={styles.time}>
-          <p>남은시간</p>
-          <p>{time}</p>
-        </div>
-      </div>
+      <Header time={time} intraId={intraId} />
 
       <div className={styles.content}>
-        <div className={styles.sidebar}>
-          <div className={styles.indexs}>
-            <div className={styles.index}>
-              문제 1
-              <Image src={Check} alt="Check" className={styles.image} />
-            </div>
-            <div className={styles.index}>
-              문제 2
-              <Image src={Cancel} alt="Cancel" className={styles.image} />
-            </div>
-            <div className={styles.index}>
-              문제 3
-              <Image src={Cancel} alt="Cancel" className={styles.image} />
-            </div>
-            <div className={styles.index}>
-              문제 4
-              <Image src={Cancel} alt="Cancel" className={styles.image} />
-            </div>
-          </div>
+        <Sidebar
+          subjects={subjects}
+          selectedSubject={selectedSubject}
+          onSubjectClick={handleSubjectClick}
+          progress={progress}
+        />
 
-          <div className={styles.progress}>
-            <p>진행률</p>
-            <p>{progress}</p>
-          </div>
-        </div>
         <div className={styles.main}>
-          <div className={styles.question}>
-            <div className={styles.qTitle}>
-              <p>문제 1</p>
-              <Image src={Cancel} alt="Cancel" className={styles.image} />
-            </div>
-            <div className={styles.qContent}>
-              어쩌구저쩌구 hello world를 출력해주세요.
-              <br />
-              어쩌구저쩌구 hello world를 출력해주세요.
-            </div>
-          </div>
-          <div className={styles.game}>
-            <div className={styles.boardWrapper}>
-              <div className={styles.board}>
-                <label className={styles.inputLabel}>
-                  {inputValue ? "입력중입니다..." : "여기에 입력하세요."}
-                </label>
-                <input
-                  type="text"
-                  className={styles.boardInput}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onCopy={handleCopy}
-                  onCut={handleCopy}
-                  onPaste={handleCopy}
-                />
-              </div>
-              <button className={styles.button}>제출</button>
-            </div>
-            <div className={styles.result}>
-              <p>컴파일 결과</p>
-              <div className={styles.resultBox}></div>
-            </div>
-          </div>
-
+          {selectedSubject && <Question selectedSubject={selectedSubject} />}
+          <Answer
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            handleCopy={handleCopy}
+            intraId={intraId}
+            onSubmit={onsubmit}
+            curLevel={selectedSubject?.level}
+          />
           <div className={styles.buttons}>
-            <button className={`${styles.button} ${styles.violet}`}>
+            <button
+              className={`${styles.button} ${styles.violet}`}
+              onClick={handlePrevious}
+            >
               이전
             </button>
-            <button className={`${styles.button} ${styles.violet}`}>
+            <button
+              className={`${styles.button} ${styles.violet}`}
+              onClick={handleNext}
+            >
               이후
             </button>
           </div>
@@ -97,4 +135,5 @@ const GamePage = () => {
     </div>
   );
 };
+
 export default GamePage;
