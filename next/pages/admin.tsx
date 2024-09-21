@@ -1,6 +1,6 @@
 import styles from "../styles/admin/admin.module.scss";
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { BASE_URL } from "@/type/constant";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ type Subject = {
   name: string;
   content: string;
   level: number;
-  isSolved: boolean;
+  solved: boolean;
 };
 
 type ListItem = {
@@ -25,18 +25,18 @@ interface AdminProps {
 export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
   const router = useRouter();
 
-  const [level, setLevel] = useState('');
-  const [subjectTitle, setSubjectTitle] = useState('');
-  const [subjectContent, setSubjectContent] = useState('');
-  const [testCase, setTestCase] = useState('');
-  const [correctOutput, setCorrectOutput] = useState('');
+  const [level, setLevel] = useState("");
+  const [subjectTitle, setSubjectTitle] = useState("");
+  const [subjectContent, setSubjectContent] = useState("");
+  const [testCase, setTestCase] = useState("");
+  const [correctOutput, setCorrectOutput] = useState("");
   const [listData, setListData] = useState<ListItem[] | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null); // 토글 상태를 관리
-  
-   // 페이지 접근 권한 체크
-   useEffect(() => {
+
+  // 페이지 접근 권한 체크
+  useEffect(() => {
     if (!isAllowed) {
-      router.push('/');
+      router.push("/");
     } else {
       // 한번 접근을 허용한 후 다시 false로 설정
       setIsAllowed(false);
@@ -45,77 +45,66 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
 
   const handleStart = async () => {
     try {
-      const response = await axios.post(
-        `${BASE_URL}admin/competition`
-      );
-      if (response.status === 201)
-        alert('대회가 시작되었습니다.');
+      const response = await axios.post(`${BASE_URL}admin/competition`);
+      if (response.status === 201) alert("대회가 시작되었습니다.");
     } catch (error) {
-        alert('Error');
-        console.error("Error fetching subjects:", error);
+      alert("Error");
+      console.error("Error fetching subjects:", error);
     }
   };
 
   const handleFinish = async () => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL}admin/competition`
-      );
-      if (response.status === 204)
-        alert('대회가 종료되었습니다.');
+      const response = await axios.patch(`${BASE_URL}admin/competition`);
+      if (response.status === 204) alert("대회가 종료되었습니다.");
     } catch (error) {
-        alert('Error');
-        console.error("Error fetching subjects:", error);
+      alert("Error");
+      console.error("Error fetching subjects:", error);
     }
   };
 
   const handleSubmit = async () => {
     try {
       // 문제 데이터 보내기 추가
-      const response = await axios.post(
-        `${BASE_URL}admin/subject`,
-        {
-          name: subjectTitle,
-          content: subjectContent,
-          level: level,
-          testCase:testCase,
-          correctOutput: correctOutput
-        }
-      );
+      const response = await axios.post(`${BASE_URL}admin/subject`, {
+        name: subjectTitle,
+        content: subjectContent,
+        level: level,
+        testCase: testCase,
+        correctOutput: correctOutput,
+      });
       if (response.status === 201) {
-        alert('문제가 정상적으로 등록되었습니다.');
-        setSubjectTitle('');
-        setSubjectContent('');
-        setLevel('');
-        setTestCase('');
-        setCorrectOutput('');
+        alert("문제가 정상적으로 등록되었습니다.");
+        setSubjectTitle("");
+        setSubjectContent("");
+        setLevel("");
+        setTestCase("");
+        setCorrectOutput("");
       }
     } catch (error) {
-        alert('Error');
-        console.error("Error fetching subjects:", error);
+      alert("Error");
+      console.error("Error fetching subjects:", error);
     }
   };
 
   const handleResultList = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}admin/result/list`
-      );
+      const response = await axios.get(`${BASE_URL}admin/result/list`);
       if (response.status === 200) {
         setListData(response.data);
-        alert('결과 리스트 불러오기 성공');
+        alert("결과 리스트 불러오기 성공");
       }
     } catch (error) {
-      alert('Error');
+      alert("Error");
       console.error("Error fetching subjects:", error);
     }
   };
 
   const toggleDetail = (index: number) => {
     if (expandedIndex === index) {
-      setExpandedIndex(null); 
+      setExpandedIndex(null);
     } else {
-      setExpandedIndex(index); 
+      setExpandedIndex(index);
     }
   };
 
@@ -198,7 +187,7 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
             <button className={styles.adminBtn} onClick={handleResultList}>
               결과 조회하기
             </button>
-              {listData
+            {listData
               ? listData.map((item, index) => (
                   <div
                     key={index}
@@ -212,8 +201,11 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
                     {expandedIndex === index && (
                       <div className={styles.listDetail}>
                         {item.subjects.map((sub, id) => (
-                          <div key={`${index}_${id}`} className={styles.listDetail}>
-                            {sub.isSolved ? <p>✅</p> : <p>❌</p>}
+                          <div
+                            key={`${index}_${id}`}
+                            className={styles.listDetail}
+                          >
+                            {sub.solved ? <p>✅</p> : <p>❌</p>}
                             <p> | </p>
                             <p>level: {sub.level}</p>
                             <p> | </p>

@@ -19,7 +19,7 @@ const GamePage = () => {
     e.preventDefault();
   };
 
-  const solvedCount = subjects.filter((subject) => subject.isSolved).length;
+  const solvedCount = subjects.filter((subject) => subject.solved).length;
   const totalCount = subjects.length;
   const progress = `${solvedCount} / ${totalCount}`;
   const router = useRouter();
