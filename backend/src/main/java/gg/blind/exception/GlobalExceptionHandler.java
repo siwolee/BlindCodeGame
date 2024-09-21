@@ -12,4 +12,16 @@ public class GlobalExceptionHandler {
 		ErrorResponse response = new ErrorResponse(exception.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
 	}
+
+	@ExceptionHandler(DuplicationException.class)
+	protected ResponseEntity handleException(DuplicationException exception) {
+		ErrorResponse response = new ErrorResponse(exception.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+	}
+
+	@ExceptionHandler(NotFoundException.class)
+	protected ResponseEntity handleException(NotFoundException exception) {
+		ErrorResponse response = new ErrorResponse(exception.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus()));
+	}
 }
