@@ -14,7 +14,7 @@ const Question = ({ selectedSubject }: QuestionProps) => {
     <div className={styles.question}>
       <div className={styles.qTitle}>
         <p>{selectedSubject.name}</p>
-        {selectedSubject.isSolved ? (
+        {selectedSubject.solved ? (
           <Image src={Check} alt="Check" className={styles.check} />
         ) : (
           <Image src={Cancel} alt="Cancel" className={styles.cancel} />

@@ -4,6 +4,8 @@ FROM openjdk:11-jdk
 # Set the working directory inside the container
 WORKDIR /app
 
+RUN apt-get update -y && apt-get install -y gcc
+
 # Copy the Gradle wrapper and build files first
 COPY gradlew .
 COPY gradle gradle
