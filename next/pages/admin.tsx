@@ -1,6 +1,8 @@
 import styles from "../styles/admin/admin.module.scss";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { BASE_URL } from "@/type/constant";
+import axios from "axios";
 
 type Subject = {
   name: string;
@@ -41,124 +43,71 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
     }
   }, [router]);
 
-  // const listData: ListItem[] = [
-  //     {
-  //       intraId: 'jeongrol',
-  //       grade: 5,
-  //       subjects: [
-  //       {
-  //         name: '테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 ',
-  //         content: 'test',
-  //         level: 1,
-  //         isSolved: false,
-  //       },
-  //       {
-  //         name: '두번째',
-  //         content: '가갸거겨',
-  //         level: 2,
-  //         isSolved: true,
-  //       },
-  //       ]
-  //     },
-  //     {
-  //       intraId: 'fff',
-  //       grade: 3,
-  //       subjects: [
-  //       {
-  //         name: '테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 테스트입니다 ',
-  //         content: 'test',
-  //         level: 1,
-  //         isSolved: false,
-  //       },
-  //       {
-  //         name: '두번째',
-  //         content: '가갸거겨',
-  //         level: 2,
-  //         isSolved: false,
-  //       },
-  //       ]
-  //     }
-  //   ];  
-
   const handleStart = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/blind/admin/competition`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
+      const response = await axios.post(
+        `${BASE_URL}admin/competition`
+      );
+      if (response.status === 201)
         alert('대회가 시작되었습니다.');
-      } else {
-        console.log('res not ok');
-      }
     } catch (error) {
-      alert(error);
-      console.log('error: ', error);
+        alert('Error');
+        console.error("Error fetching subjects:", error);
     }
   };
 
   const handleFinish = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/blind/admin/competition`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
+      const response = await axios.patch(
+        `${BASE_URL}admin/competition`
+      );
+      if (response.status === 204)
         alert('대회가 종료되었습니다.');
-      } else {
-        console.log('res not ok');
-      }
     } catch (error) {
-      alert(error);
-      console.log('error: ', error);
+        alert('Error');
+        console.error("Error fetching subjects:", error);
     }
   };
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/blind/admin/subject`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
+      // 문제 데이터 보내기 추가
+      const response = await axios.post(
+        `${BASE_URL}admin/subject`,
+        {
+          name: subjectTitle,
+          content: subjectContent,
+          level: level,
+          testCase:testCase,
+          correctOutput: correctOutput
+        }
+      );
+      if (response.status === 201) {
         alert('문제가 정상적으로 등록되었습니다.');
-        setLevel('');
         setSubjectTitle('');
         setSubjectContent('');
+        setLevel('');
         setTestCase('');
         setCorrectOutput('');
-      } else {
-        console.log('res not ok');
       }
     } catch (error) {
-      alert(error);
-      console.log('error: ', error);
+        alert('Error');
+        console.error("Error fetching subjects:", error);
     }
   };
 
   const handleResultList = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/blind/admin/result/list`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setListData(data);
-      } else {
-        console.log('res not ok');
+      const response = await axios.get(
+        `${BASE_URL}admin/result/list`
+      );
+      if (response.status === 200) {
+        setListData(response.data);
+        alert('결과 리스트 불러오기 성공');
       }
     } catch (error) {
-      alert(error);
-      console.log('error: ', error);
+      alert('Error');
+      console.error("Error fetching subjects:", error);
     }
   };
 
