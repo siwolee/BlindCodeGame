@@ -1,3 +1,13 @@
 $font-text-bold: "11StreetGothicBold";
 $font-text-regular: "11StreetGothicRegular";
 $font-text-light: "11StreetGothicLight";
+
+.text-bold {
+  font-family: var($font-text-bold);
+  font-weight: 700;
+}
+
+.text-regular {
+  font-family: var($font-text-regular);
+  font-weight: 400;
+}
