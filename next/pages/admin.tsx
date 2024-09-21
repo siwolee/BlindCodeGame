@@ -131,6 +131,7 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
               type="text"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
+              className={styles.textColor}
             />
           </div>
 
@@ -140,6 +141,7 @@ export default function AdminPage({ isAllowed, setIsAllowed }: AdminProps) {
               type="text"
               value={subjectTitle}
               onChange={(e) => setSubjectTitle(e.target.value)}
+              className={styles.textColor}
             />
           </div>
 
