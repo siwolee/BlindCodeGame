@@ -41,6 +41,10 @@ public class UserService {
 	public TimeResDto getGame() {
 		Competition competition = competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
 		return new TimeResDto(competition.getCreatedAt());
+	public TimeResDto getGame(String intraId) {
+		competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
+		User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new NotFoundException(NOT_USER));
+		return new TimeResDto(user.getCreatedAt());
 	}
 
 	@Transactional

@@ -20,12 +20,9 @@ public class Competition {
 	private Long id;
 	@Column(name = "is_end")
 	private Boolean isEnd;
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
 
 	public Competition() {
 		this.isEnd = false;
-		this.createdAt = LocalDateTime.now();
 	}
 
 	public void endCompetition() {
