@@ -15,7 +15,7 @@ const Header = ({ time, intraId }: HeaderProps) => {
   const [remainingTime, setRemainingTime] = useState(limit);
 
   useEffect(() => {
-    if (time === "") {
+    if (!time || time === "") {
       setRemainingTime(0);
       return;
     }
@@ -32,6 +32,7 @@ const Header = ({ time, intraId }: HeaderProps) => {
 
       if (timeLeft <= 0) {
         clearInterval(timer);
+        handleFinish();
       }
     }, 1000);
 

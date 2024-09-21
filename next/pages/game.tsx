@@ -10,20 +10,18 @@ import { BASE_URL } from "@/type/constant";
 import { useRouter } from "next/router";
 
 const GamePage = () => {
+  const router = useRouter();
+  const { intraId } = router.query as { intraId: string };
+
   const [inputValue, setInputValue] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<SubjectProps>();
   const [subjects, setSubjects] = useState<SubjectProps[]>([]);
   const [time, setTime] = useState<string>("");
+  const [progress, setProgress] = useState<string>("");
 
-  const handleCopy = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleCopy = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    e.preventDefault(); // 복사 방지
   };
-
-  const solvedCount = subjects.filter((subject) => subject.solved).length;
-  const totalCount = subjects.length;
-  const progress = `${solvedCount} / ${totalCount}`;
-  const router = useRouter();
-  const { intraId } = router.query as { intraId: string };
 
   const fetchSubjects = async () => {
     try {
@@ -31,8 +29,12 @@ const GamePage = () => {
         `${BASE_URL}subject/list?intraId=${intraId}`
       );
       setSubjects(response.data);
-      if (response.data.length > 0 && !selectedSubject) {
-        setSelectedSubject(response.data[0]);
+
+      if (response.data.length > 0) {
+        const updatedSelectedSubject = response.data.find(
+          (subject: SubjectProps) => subject.level === selectedSubject?.level
+        );
+        setSelectedSubject(updatedSelectedSubject || response.data[0]); // 현재 주제가 없으면 첫 번째 주제 선택
       }
     } catch (error) {
       console.error("Error fetching subjects:", error);
@@ -40,9 +42,15 @@ const GamePage = () => {
   };
 
   useEffect(() => {
+    const solvedCount = subjects.filter((subject) => subject.solved).length;
+    const totalCount = subjects.length;
+    setProgress(`${solvedCount} / ${totalCount}`);
+  }, [subjects]);
+
+  useEffect(() => {
     const fetchTime = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}game`);
+        const response = await axios.get(`${BASE_URL}game?intraId=${intraId}`);
         setTime(response.data.time);
       } catch (error) {
         console.error("Error fetching time:", error);
@@ -82,6 +90,7 @@ const GamePage = () => {
     const currentIndex = subjects.findIndex(
       (subject) => subject.level === selectedSubject.level
     );
+    const totalCount = subjects.length;
     if (currentIndex < totalCount - 1) {
       setSelectedSubject(subjects[currentIndex + 1]);
     } else {
