@@ -26,7 +26,7 @@ export default function HomePage({ setIsAllowed }: HomeProps) {
       );
       if (response.status === 201) {
         setIsAllowed(true);
-        router.push('/game');
+        router.push(`/game?intraId=${inputValue}`);
       }
     } catch (error) {
         alert('아직 시작되지 않았습니다.');
