@@ -1,6 +1,9 @@
 import styles from "../styles/home/home.module.scss";
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { BASE_URL } from "@/type/constant";
+import axios from "axios";
+
 
 interface HomeProps {
   setIsAllowed: (value: boolean) => void;
@@ -11,36 +14,25 @@ export default function HomePage({ setIsAllowed }: HomeProps) {
   const [inputValue, setInputValue] = useState('');
 
   const handleSubmit = async () => {
-    try {
-      // TEST TMP CODE
-      const tmpOk = true;
-      if (tmpOk) {
-        setIsAllowed(true);
-        inputValue === process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY ?
-        router.push('/admin') : router.push('/game');
-      }
-
-      // const res = await fetch(`http://localhost:8080/blind/game?intraId=${inputValue}`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
-      // // console.log("res: ", res);
-      // if (res.ok) {
-      //   // const data = await res.json();
-      //   // console.log(data);
-      //   setIsAllowed(true);
-      //   inputValue === process.env.ADMIN_SECRET_KEY ?
-      //     router.push('/admin') : router.push('/game');
-      // } else {
-      //   console.log('res not ok');
-      // }
-    } catch (error) {
-      console.log('error: ', error);
-      alert('아직 시작 되지 않았습니다.');
+    if (inputValue === process.env.NEXT_PUBLIC_ADMIN_SECRET_KEY) {
+      setIsAllowed(true);
+      router.push('/admin');
+      return;
     }
-  };
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}game?intraId=${inputValue}`
+      );
+      if (response.status === 201) {
+        setIsAllowed(true);
+        router.push('/game');
+      }
+    } catch (error) {
+        alert('아직 시작되지 않았습니다.');
+        console.error("Error fetching subjects:", error);
+    }
+  }
 
   const title = '🙇🏻‍♀️ 석봉아 코드를 썰거라 🙇🏼‍♂️';
 

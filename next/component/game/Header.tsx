@@ -20,7 +20,9 @@ const Header = ({ time, intraId }: HeaderProps) => {
       return;
     }
 
-    const startTime = new Date(time).getTime();
+    const startTime = new Date(
+      new Date(time).getTime() + 9 * 60 * 60 * 1000
+    ).getTime();
     const deadline = startTime + limit * 1000;
 
     const timer = setInterval(() => {
