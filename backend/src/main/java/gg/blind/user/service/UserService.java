@@ -5,6 +5,7 @@ import static gg.blind.exception.ErrorCode.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gg.blind.compiler.CCompiler;
 import gg.blind.compiler.CompileResult;
-import gg.blind.data.entity.Competition;
 import gg.blind.exception.BusinessException;
 import gg.blind.exception.NotFoundException;
 import gg.blind.data.entity.Subject;
@@ -38,9 +38,6 @@ public class UserService {
 	private final UserSubjectRepository userSubjectRepository;
 	private final CompetitionRepository competitionRepository;
 
-	public TimeResDto getGame() {
-		Competition competition = competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
-		return new TimeResDto(competition.getCreatedAt());
 	public TimeResDto getGame(String intraId) {
 		competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
 		User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new NotFoundException(NOT_USER));
@@ -50,9 +47,16 @@ public class UserService {
 	@Transactional
 	public GameResDto gameStart(String intraId) {
 		competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
-		User user = userRepository.save(new User(intraId));
-		if (user.getIsDone())
-			throw new BusinessException(ALREADY_DONE);
+		Optional<User> optionalUser = userRepository.findByIntraId(intraId);
+		User user;
+		if (optionalUser.isPresent()) {
+			user = optionalUser.get();
+			if (user.getIsDone())
+				throw new BusinessException(ALREADY_DONE);
+			return new GameResDto(user.getIntraId());
+		} else {
+			user = userRepository.save(new User(intraId));
+		}
 		return new GameResDto(user.getIntraId());
 	}
 
@@ -62,13 +66,12 @@ public class UserService {
 		if (user.getIsDone())
 			throw new BusinessException(ALREADY_DONE);
 		List<Subject> subjects = subjectRepository.findAll();
-		List<UserSubject> userSubjects = userSubjectRepository.findByUserId(user.getId());
+		List<UserSubject> userSubjects = userSubjectRepository.findByUserIdAndIsSolvedTrue(user.getId());
 		return subjects.stream().map(subject -> {
 			UserSubject userSubject = userSubjects.stream()
 				.filter(us -> us.getSubjectId().equals(subject.getId()))
 				.findFirst()
 				.orElse(null);
-
 			if (userSubject != null) {
 				return new SubjectResDto(subject, userSubject);
 			} else {
@@ -110,6 +113,9 @@ public class UserService {
 		CompileResult compileResult = cCompiler.compileAndRun(sourceFileName, testCase);
 
 		boolean isCorrect = compileResult.getOutput().trim().equals(correctOutput.trim());
+		if (isCorrect) {
+			user.increaseGrade();
+		}
 
 		SubmitSubjectResDto result = new SubmitSubjectResDto(testCase, compileResult.getOutput(), compileResult.getError(),correctOutput, isCorrect);
 
@@ -126,6 +132,4 @@ public class UserService {
 		user.setIsDone(true);
 		userRepository.save(user);
 	}
-
-
 }
