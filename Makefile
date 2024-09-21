@@ -18,12 +18,14 @@ server : $(NAME)
 cleanbuild:
 	rm -rf $(BUILDFILE)
 
-frontbuild : 
+$(FRONT_BUILDFILE) : 
 	if ! test -f $(FRONT_BUILDFILE); then \
 	cd next && \
 	npm install && \
 	npm run build; \
 	fi
+
+
 
 
 $(NAME) : $(BUILDFILE)
