@@ -3,8 +3,6 @@ services:
     build: ./next
     ports:
       - "3000:3000"
-    env_file:
-      - ./.env
 
   backend:
     build:
@@ -21,22 +19,6 @@ services:
       SPRING_DATASOURCE_USERNAME: "user"
       SPRING_DATASOURCE_PASSWORD: "1234"
 
-  # mysql:
-  #   build: ./mysql
-  #   networks:
-  #     - internal
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "--silent"]
-  #     interval: 10s
-  #     retries: 5
-  #     timeout: 10s
-  #   expose:
-  #     - "3306"
-  #   environment:
-  #     MYSQL_DATABASE: blind
-  #     MYSQL_USER: user
-  #     MYSQL_PASSWORD: 1234
-  #     MYSQL_ROOT_PASSWORD: 1235
   mysql:
     image: mysql/mysql-server:8.0
     restart: unless-stopped
@@ -56,6 +38,12 @@ services:
       - "--collation-server=utf8mb4_unicode_ci"
     networks:
       - internal
+  nginx:
+    build: ./nginx
+    ports:
+      - "443:443"
+    depends_on:
+      - next
 
 volumes:
   db_data:
