@@ -32,7 +32,11 @@ public class AdminService {
 	private final UserSubjectRepository userSubjectRepository;
 	private final CompetitionRepository competitionRepository;
 
+	@Transactional
 	public void createSubject(AddSubjectReqDto addSubjectReqDto) {
+		subjectRepository.findByLevel(addSubjectReqDto.getLevel()).ifPresent(s -> {
+				throw new DuplicationException(ALREADY_SUBJECT);
+		});
 		Subject subject = new Subject(addSubjectReqDto);
 		subjectRepository.save(subject);
 	}
