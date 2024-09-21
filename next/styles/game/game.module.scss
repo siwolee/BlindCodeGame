@@ -40,7 +40,8 @@
 
 .layout {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow-y: scroll;
   background: var(
     --violet-light,
     linear-gradient(180deg, #a9a2b9 0%, #c9c9c9 100%)
