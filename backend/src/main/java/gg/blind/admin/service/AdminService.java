@@ -5,6 +5,8 @@ import static gg.blind.exception.ErrorCode.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import gg.blind.admin.dto.AddSubjectReqDto;
@@ -30,11 +32,16 @@ public class AdminService {
 	private final UserSubjectRepository userSubjectRepository;
 	private final CompetitionRepository competitionRepository;
 
+	@Transactional
 	public void createSubject(AddSubjectReqDto addSubjectReqDto) {
+		subjectRepository.findByLevel(addSubjectReqDto.getLevel()).ifPresent(s -> {
+				throw new DuplicationException(ALREADY_SUBJECT);
+		});
 		Subject subject = new Subject(addSubjectReqDto);
 		subjectRepository.save(subject);
 	}
 
+	@Transactional
 	public void startCompetition() {
 		competitionRepository.findByIsEndFalse().ifPresent(competition -> {
 			throw new DuplicationException(ALREADY_COMPETITION);
@@ -43,6 +50,7 @@ public class AdminService {
 		competitionRepository.save(competition);
 	}
 
+	@Transactional
 	public void endCompetition() {
 		Competition competition = competitionRepository.findByIsEndFalse().orElseThrow(() -> new BusinessException(NOT_START));
 		competition.endCompetition();
@@ -50,9 +58,6 @@ public class AdminService {
 	}
 
 	public List<ResultResDto> getResultList() {
-		Competition competition = competitionRepository.findByIsEndTrueOrderByIdDesc()
-			.orElseThrow(() -> new BusinessException(NOT_START));
-
 		List<User> users = userRepository.findAll();
 		List<Subject> subjects = subjectRepository.findAll();
 		List<UserSubject> userSubjects = userSubjectRepository.findAll();
@@ -67,7 +72,6 @@ public class AdminService {
 					.anyMatch(us -> us.getUserId().equals(user.getId()) && us.getSubjectId().equals(subject.getId()) && us.getIsSolved());
 				subjectResults.add(new SubjectResDto(subject, isSolved));
 			}
-
 			userResults.add(new ResultResDto(user.getIntraId(), user.getGrade(), subjectResults));
 		}
 

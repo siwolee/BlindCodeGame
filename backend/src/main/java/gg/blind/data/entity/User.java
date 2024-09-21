@@ -1,5 +1,7 @@
 package gg.blind.data.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,11 +25,14 @@ public class User {
 	private int grade;
 	@Column(name = "is_done")
 	private Boolean isDone;
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
 
 	public User(String intraId) {
 		this.intraId = intraId;
 		this.grade = 0;
 		this.isDone = false;
+		this.createdAt = LocalDateTime.now();
 	}
 
 	public void increaseGrade() {

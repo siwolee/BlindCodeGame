@@ -27,8 +27,8 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/game")
-	public ResponseEntity<TimeResDto> getGame() {
-		TimeResDto timeResDto = userService.getGame();
+	public ResponseEntity<TimeResDto> getGame(@RequestParam String intraId)  {
+		TimeResDto timeResDto = userService.getGame(intraId);
 		return ResponseEntity.status(HttpStatus.OK).body(timeResDto);
 	}
 
