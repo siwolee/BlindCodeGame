@@ -6,7 +6,7 @@ import { BASE_URL } from "@/type/constant";
 interface GameProps {
   inputValue: string;
   setInputValue: (value: string) => void;
-  handleCopy: (e: React.ClipboardEvent<HTMLInputElement>) => void;
+  handleCopy: (e: React.ClipboardEvent<HTMLTextAreaElement>) => void;
   intraId: string;
   onSubmit: () => void;
   curLevel: number | undefined;
@@ -32,12 +32,36 @@ const Answer = ({
         }
       );
 
-      const { userOutput } = response.data;
-      setResult(userOutput);
+      const data = response.data;
+      switch (response.status) {
+        case 201:
+          if (data.errorOutput !== "") {
+            alert("컴파일 에러가 발생했습니다.");
+          } else if (data.userOutput !== data.correctOutput) {
+            setResult(data.userOutput);
+            alert("오답입니다.");
+          } else {
+            alert("정답입니다.");
+            setResult(data.userOutput);
+          }
+          break;
+        default:
+          if (response.status === 409) {
+            alert("이미 제출한 문제입니다.");
+          }
+          break;
+      }
       onSubmit();
     } catch (error) {
-      console.error("API 호출 실패:", error);
-      alert("제출에 실패했습니다.");
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 409) {
+          alert("이미 제출한 문제입니다.");
+        } else {
+          alert("제출에 실패했습니다.");
+        }
+      } else {
+        alert("제출에 실패했습니다.");
+      }
     }
   };
 
@@ -48,8 +72,7 @@ const Answer = ({
           <label className={styles.inputLabel}>
             {inputValue ? "입력중입니다..." : "여기에 입력하세요."}
           </label>
-          <input
-            type="text"
+          <textarea
             className={styles.boardInput}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
