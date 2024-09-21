@@ -1,2 +1,17 @@
 FROM node:18-alpine AS base
 
+# Set working directory
+WORKDIR /app
+
+# Install dependencies only when needed
+COPY ./package.json package-lock.json ./
+RUN npm ci
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Run the app in development mode
+CMD ["npm", "run", "dev"]
