@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import gg.blind.compiler.CCompiler;
 import gg.blind.compiler.CompileResult;
 import gg.blind.exception.BusinessException;
+import gg.blind.exception.DuplicationException;
 import gg.blind.exception.NotFoundException;
 import gg.blind.data.entity.Subject;
 import gg.blind.data.entity.User;
@@ -52,7 +53,7 @@ public class UserService {
 		if (optionalUser.isPresent()) {
 			user = optionalUser.get();
 			if (user.getIsDone())
-				throw new BusinessException(ALREADY_DONE);
+				throw new DuplicationException(ALREADY_DONE);
 			return new GameResDto(user.getIntraId());
 		} else {
 			user = userRepository.save(new User(intraId));
