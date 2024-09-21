@@ -4,9 +4,10 @@ COMPOSEFILE = ./docker-compose.yml
 
 FILE = $(COMPOSEFILE)
 
-BUILDFILE = \
+FRONT_BUILDFILE = ./next/.next
 # ./backend/back \
 
+BUILDFILE = $(FRONT_BUILDFILE) $(BACK_BUILDFILE)
 
 all		: $(BUILD) $(NAME)
 
@@ -17,8 +18,15 @@ server : $(NAME)
 cleanbuild:
 	rm -rf $(BUILDFILE)
 
+frontbuild : 
+	if ! test -f $(FRONT_BUILDFILE); then \
+	cd next && \
+	npm install && \
+	npm run build; \
+	fi
 
-$(NAME) : cleanbuild
+
+$(NAME) : $(BUILDFILE)
 	docker-compose -f $(FILE) up --build #--detach 
 
 clean : 
