@@ -13,14 +13,13 @@ const GamePage = () => {
   const router = useRouter();
   const { intraId } = router.query as { intraId: string };
 
-  const [inputValue, setInputValue] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<SubjectProps>();
   const [subjects, setSubjects] = useState<SubjectProps[]>([]);
   const [time, setTime] = useState<string>("");
   const [progress, setProgress] = useState<string>("");
 
   const handleCopy = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    e.preventDefault(); // 복사 방지
+    e.preventDefault();
   };
 
   const fetchSubjects = async () => {
@@ -34,7 +33,7 @@ const GamePage = () => {
         const updatedSelectedSubject = response.data.find(
           (subject: SubjectProps) => subject.level === selectedSubject?.level
         );
-        setSelectedSubject(updatedSelectedSubject || response.data[0]); // 현재 주제가 없으면 첫 번째 주제 선택
+        setSelectedSubject(updatedSelectedSubject || response.data[0]);
       }
     } catch (error) {
       console.error("Error fetching subjects:", error);
@@ -60,11 +59,6 @@ const GamePage = () => {
     fetchSubjects();
     fetchTime();
   }, [intraId]);
-
-  const handleSubjectClick = (subject: SubjectProps) => {
-    setSelectedSubject(subject);
-    setInputValue("");
-  };
 
   const handlePrevious = () => {
     if (!selectedSubject) {
@@ -98,11 +92,6 @@ const GamePage = () => {
     }
   };
 
-  const onsubmit = () => {
-    setInputValue("");
-    fetchSubjects();
-  };
-
   return (
     <div className={styles.layout}>
       <Header time={time} intraId={intraId} />
@@ -111,18 +100,16 @@ const GamePage = () => {
         <Sidebar
           subjects={subjects}
           selectedSubject={selectedSubject}
-          onSubjectClick={handleSubjectClick}
+          onSubjectClick={setSelectedSubject}
           progress={progress}
         />
 
         <div className={styles.main}>
           {selectedSubject && <Question selectedSubject={selectedSubject} />}
           <Answer
-            inputValue={inputValue}
-            setInputValue={setInputValue}
             handleCopy={handleCopy}
             intraId={intraId}
-            onSubmit={onsubmit}
+            onSubmit={fetchSubjects}
             curLevel={selectedSubject?.level}
           />
           <div className={styles.buttons}>
