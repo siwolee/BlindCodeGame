@@ -1,17 +1,5 @@
 services:
   next:
-    # dev mode
-    # build:
-    #   context: ./next
-    #   dockerfile: Dockerfile.dev
-    # ports:
-    #   - "3000:3000"
-    # environment:
-    #   - NODE_ENV=development
-    # volumes:
-    #   - ./next:/app
-
-    # prod mode
     build:
       context: ./next
       dockerfile: Dockerfile
@@ -24,8 +12,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     depends_on:
       - mysql
     networks:
@@ -59,6 +47,9 @@ services:
       - "443:443"
     depends_on:
       - next
+      - backend
+    networks:
+      - internal
 
 volumes:
   db_data:
